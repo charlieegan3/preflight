@@ -11,7 +11,7 @@ import (
 	"github.com/jetstack/preflight/pkg/version"
 )
 
-func TestConstructClusterSummary(t *testing.T) {
+func TestNewClusterSummary(t *testing.T) {
 	exampleReport1 := api.Report{
 		ID:               "exampleReport1",
 		PreflightVersion: "version.PreflightVersion",
@@ -101,9 +101,9 @@ func TestConstructClusterSummary(t *testing.T) {
 		},
 	}
 
-	got, err := ConstructClusterSummary([]api.Report{exampleReport1, exampleReport2})
+	got, err := NewClusterSummary([]api.Report{exampleReport1, exampleReport2})
 	if err != nil {
-		t.Fatalf("ConstructClusterSummary raised an error %v", err)
+		t.Fatalf("NewClusterSummary raised an error %v", err)
 	}
 
 	want := api.ClusterSummary{
@@ -139,7 +139,7 @@ func TestConstructClusterSummary(t *testing.T) {
 	}
 }
 
-func TestConstructReportSet(t *testing.T) {
+func TestNewReportSet(t *testing.T) {
 	exampleReport1 := api.Report{
 		ID:               "exampleReport1",
 		PreflightVersion: "version.PreflightVersion",
@@ -229,9 +229,9 @@ func TestConstructReportSet(t *testing.T) {
 		},
 	}
 
-	got, err := ConstructReportSet([]api.Report{exampleReport1, exampleReport2})
+	got, err := NewReportSet([]api.Report{exampleReport1, exampleReport2})
 	if err != nil {
-		t.Fatalf("ConstructReportSet raised an error %v", err)
+		t.Fatalf("NewReportSet raised an error %v", err)
 	}
 
 	want := api.ReportSet{
@@ -330,7 +330,7 @@ func TestSummarizeReport(t *testing.T) {
 	}
 }
 
-func TestConstructReport(t *testing.T) {
+func TestNewReport(t *testing.T) {
 	examplePackage := &packaging.PolicyManifest{
 		SchemaVersion:  "0.1.0",
 		ID:             "mypackage",
@@ -365,9 +365,9 @@ func TestConstructReport(t *testing.T) {
 		&results.Result{ID: rules.RuleToResult("b_rule"), Violations: []string{"violation"}},
 	}
 
-	got, err := ConstructReport(examplePackage, resultCollection)
+	got, err := NewReport(examplePackage, resultCollection)
 	if err != nil {
-		t.Fatalf("ConstructReport returned error: %v", err)
+		t.Fatalf("NewReport returned error: %v", err)
 	}
 
 	want := api.Report{
