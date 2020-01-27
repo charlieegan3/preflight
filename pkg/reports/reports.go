@@ -8,6 +8,29 @@ import (
 	"github.com/jetstack/preflight/pkg/version"
 )
 
+// SummarizeReport produces as ReportSummary from a Report
+func SummarizeReport(report api.Report) api.ReportSummary {
+	var successes, failures int
+	for _, section := range report.Sections {
+		for _, rule := range section.Rules {
+			if rule.Success {
+				successes++
+			} else {
+				failures++
+			}
+		}
+	}
+
+	return api.ReportSummary{
+		ID:           report.ID,
+		Package:      report.Package,
+		Cluster:      report.Cluster,
+		Timestamp:    report.Timestamp,
+		FailureCount: failures,
+		SuccessCount: successes,
+	}
+}
+
 // ConstructReport creates a report from a policy manifest and a results collection
 func ConstructReport(pm *packaging.PolicyManifest, rc *results.ResultCollection) (api.Report, error) {
 	report := api.Report{
