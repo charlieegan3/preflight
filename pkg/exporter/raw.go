@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 
+	"github.com/jetstack/preflight/api"
 	"github.com/jetstack/preflight/pkg/packaging"
 	"github.com/jetstack/preflight/pkg/results"
 )
@@ -25,6 +26,12 @@ func (e *RawExporter) Export(ctx context.Context, policyManifest *packaging.Poli
 		return nil, err
 	}
 	return writer, nil
+}
+
+// ExportIndex formats the supplied cluster summary
+func (e *RawExporter) ExportIndex(ctx context.Context, clusterIndex *api.ClusterSummary) (*bytes.Buffer, error) {
+	// TODO: not implemented
+	return bytes.NewBuffer([]byte{}), nil
 }
 
 // FileExtension returns the file extension for this exporter's format

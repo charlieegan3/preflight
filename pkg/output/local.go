@@ -78,3 +78,15 @@ func (o *LocalOutput) Write(ctx context.Context, policyManifest *packaging.Polic
 
 	return nil
 }
+
+// WriteIndex exports clusterSummary data in the specified format
+func (o *LocalOutput) WriteIndex(ctx context.Context, cluster string, timestamp time.Time, clusterSummary *api.ClusterSummary) error {
+	buffer, err := o.exporter.ExportIndex(ctx, clusterSummary)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("TODO %v\n", buffer)
+
+	return nil
+}

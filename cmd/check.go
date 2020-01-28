@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/jetstack/preflight/api"
 	"github.com/jetstack/preflight/pkg/datagatherer"
 	"github.com/jetstack/preflight/pkg/datagatherer/aks"
 	"github.com/jetstack/preflight/pkg/datagatherer/eks"
@@ -20,6 +21,7 @@ import (
 	"github.com/jetstack/preflight/pkg/output/gcs"
 	"github.com/jetstack/preflight/pkg/packagesources/local"
 	"github.com/jetstack/preflight/pkg/packaging"
+	"github.com/jetstack/preflight/pkg/reports"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -307,6 +309,7 @@ func check() {
 		log.Fatal("No packages were enabled. Use 'enables-packages' option in configuration to enable the packages you want to use.")
 	}
 
+	packageReports := []api.Report{}
 	for _, pkgID := range enabledPackages {
 		// Make sure we loaded the package for this.
 		pkg := packages[pkgID]
@@ -338,11 +341,29 @@ func check() {
 			log.Fatalf("Cannot marshal intermediate result: %v", err)
 		}
 
+		// build a report to build the updated context for the report index
+		report, err := reports.NewReport(manifest, rc)
+		if err != nil {
+			log.Fatalf("Cannot generate report for results: %v", err)
+		}
+		packageReports = append(packageReports, report)
+
 		for _, output := range outputs {
 			err := output.Write(ctx, manifest, intermediateBytes, rc, clusterName, checkTime)
 			if err != nil {
 				log.Fatalf("failed to output results: %s", err)
 			}
+		}
+	}
+
+	clusterSummary, err := reports.NewClusterSummary(packageReports)
+	if err != nil {
+		log.Fatalf("Cannot generate index of reports: %v", err)
+	}
+	for _, output := range outputs {
+		err := output.WriteIndex(ctx, clusterName, checkTime, &clusterSummary)
+		if err != nil {
+			log.Fatalf("failed to output index: %s", err)
 		}
 	}
 

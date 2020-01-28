@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/jetstack/preflight/api"
 	"github.com/jetstack/preflight/pkg/packaging"
 	"github.com/jetstack/preflight/pkg/results"
 	"github.com/jetstack/preflight/pkg/rules"
@@ -84,6 +85,12 @@ func (e *MarkdownExporter) Export(ctx context.Context, policyManifest *packaging
 	}
 
 	return writer, nil
+}
+
+// ExportIndex formats the supplied cluster summary
+func (e *MarkdownExporter) ExportIndex(ctx context.Context, clusterIndex *api.ClusterSummary) (*bytes.Buffer, error) {
+	// TODO: not implemented
+	return bytes.NewBuffer([]byte{}), nil
 }
 
 // FileExtension returns the file extension for this exporter's format

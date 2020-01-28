@@ -5,6 +5,7 @@ import (
 	"context"
 
 	"github.com/gomarkdown/markdown"
+	"github.com/jetstack/preflight/api"
 	"github.com/jetstack/preflight/pkg/packaging"
 	"github.com/jetstack/preflight/pkg/results"
 )
@@ -33,6 +34,12 @@ func (e *HTMLExporter) Export(ctx context.Context, policyManifest *packaging.Pol
 	}
 
 	return writer, nil
+}
+
+// ExportIndex formats the supplied cluster summary
+func (e *HTMLExporter) ExportIndex(ctx context.Context, clusterIndex *api.ClusterSummary) (*bytes.Buffer, error) {
+	// TODO: not implemented
+	return bytes.NewBuffer([]byte{}), nil
 }
 
 // FileExtension returns the file extension for this exporter's format
